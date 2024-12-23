@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&family=Song+Myung&display=swap" rel="stylesheet">
+    <title>로그인/회원가입</title>
+    <script src="firebase.js" type="module"></script>
+    <script src="script.js" type="module"></script>
+</head>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Gowun Dodum', sans-serif;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+
+    input {
+        font-family: 'Gowun Dodum', sans-serif;
+    }
+
+
+    button {
+        font-family: 'Gowun Dodum', sans-serif;
+    }
+
+
+    .container {
+        text-align: center;
+        background-color: #34495e;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 350px;
+    }
+
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: white;
+    }
+
+
+    form {
+        margin-bottom: 20px;
+    }
+
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        background-color: #2c3e50;
+        border: 1px solid #34495e;
+        color: white;
+        border-radius: 25px;
+        box-sizing: border-box;
+        font-size: 1rem;
+    }
+
+
+    input::placeholder {
+        color: #bdc3c7;
+    }
+
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #16a085;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+    }
+
+
+    hr {
+        margin-top: 20px;
+        border: 0;
+        border-top: 1px solid #34495e;
+        margin-bottom: 20px;
+    }
+
+
+    #login-button {
+        width: 100%;
+        padding: 12px;
+        background-color: #16a085;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+    }
+
+
+    #login-button:hover {
+        background-color: #1abc9c;
+    }
+
+
+    /* 전환 버튼 스타일 수정 */
+    .toggle {
+        background: none;
+        color: #ecf0f1;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin-top: 10px;
+        width: auto;
+        transition: color 0.3s ease; /* 텍스트 색만 부드럽게 전환 */
+    }
+
+
+    .toggle:hover {
+    color: #1abc9c; /* 텍스트 색만 변경 */
+    }
+
+
+
+
+    .toggle:hover {
+        color: #1abc9c;  /* 글자색만 변경 */
+    }
+
+
+</style>
+<body>
+    <div class="container" id="auth-container">
+        <!-- 로그인 폼 -->
+        <div id="login-form">
+            <h1>로그인</h1>
+            <input type="email" id="login-email" placeholder="이메일" required>
+            <input type="password" id="login-password" placeholder="비밀번호" required>
+            <button id="login-button">로그인</button>
+            <button class="toggle" id="show-signup">회원가입으로 전환</button>
+        </div>
+
+
+        <!-- 회원가입 폼 -->
+        <div id="signup-form" style="display: none;">
+            <h1>회원가입</h1>
+            <input type="email" id="signup-email" placeholder="이메일" required>
+            <input type="password" id="signup-password" placeholder="비밀번호" required>
+            <button id="signup-button">회원가입</button>
+            <button class="toggle" id="show-login">로그인으로 전환</button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJBp3-YGdAbTUpnRHOS-jWeJPjrWW-ip0",
+            authDomain: "nadingcorae.firebaseapp.com",
+            projectId: "nadingcorae",
+            storageBucket: "nadingcorae.appspot.com",
+            messagingSenderId: "17771008794",
+            appId: "1:17771008794:web:da0b7d54e3746985c752a3",
+            measurementId: "G-TDBG2XR5FP"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+
+        // 로그인 처리
+        document.getElementById("login-button").addEventListener("click", async (event) => {
+            event.preventDefault();
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                alert("로그인 성공!");
+                console.log(userCredential.user);
+
+
+                // 로그인 후 사용자 정보 로컬 스토리지에 저장
+                localStorage.setItem("user", JSON.stringify(userCredential.user));
+
+
+                // 로그인 성공 후 홈페이지로 리디렉션
+                window.location.href = "index.html";  // 홈페이지로 리디렉션
+            } catch (error) {
+                alert(`로그인 실패: ${error.message}`);
+            }
+        });
+
+
+        // Firebase에서 인증 상태가 변경될 때마다 호출되는 리스너
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(user));
+            } else {
+                localStorage.removeItem("user");
+            }
+        });
+
+
+        // 페이지 로드 시 로그인 상태 확인
+        window.onload = () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user) {
+                if (window.location.pathname === "/login_signup.html") {
+                    window.location.href = "index.html";
+                }
+            }
+        };
+
+
+        // 회원가입 처리
+        document.getElementById("signup-button").addEventListener("click", async (event) => {
+            event.preventDefault();
+            const email = document.getElementById("signup-email").value;
+            const password = document.getElementById("signup-password").value;
+
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                alert("회원가입 성공!");
+                console.log(userCredential.user);
+
+
+                // 회원가입 후 로그인 폼으로 전환
+                toggleForms("login");
+            } catch (error) {
+                alert(`회원가입 실패: ${error.message}`);
+            }
+        });
+
+
+        // 폼 전환 로직
+        document.getElementById("show-signup").addEventListener("click", () => toggleForms("signup"));
+        document.getElementById("show-login").addEventListener("click", () => toggleForms("login"));
+
+
+        function toggleForms(formType) {
+            const loginForm = document.getElementById("login-form");
+            const signupForm = document.getElementById("signup-form");
+
+
+            if (formType === "signup") {
+                loginForm.style.display = "none";
+                signupForm.style.display = "block";
+            } else {
+                loginForm.style.display = "block";
+                signupForm.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
