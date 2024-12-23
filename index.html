@@ -1,180 +1,417 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>덕현고등학교 코딩 커뮤니티</title>
-   <style>
-       /* 기본 스타일 */
-       * {
-           margin: 0;
-           padding: 0;
-           box-sizing: border-box;
-       }
-       body {
-           font-family: 'Arial', sans-serif;
-           background: linear-gradient(to right, #00c6ff, #0072ff);
-           color: #333;
-           display: flex;
-           flex-direction: column;
-           min-height: 100vh;
-       }
-     
-       /* 헤더 */
-       header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           background-color: rgba(0, 0, 0, 0.6);
-           color: white;
-           padding: 20px;
-           font-size: 1.5em;
-       }
-       header h1 {
-           margin-left: 20px;
-       }
-       .auth-buttons {
-           margin-right: 20px;
-       }
-       .auth-buttons a {
-           text-decoration: none;
-           color: white;
-           font-weight: bold;
-           margin-left: 10px;
-           padding: 8px 12px;
-           background-color: #0073e6;
-           border-radius: 5px;
-           transition: background-color 0.3s;
-       }
-       .auth-buttons a:hover {
-           background-color: #005bb5;
-       }
-     
-       /* 네비게이션 */
-       nav {
-           display: flex;
-           justify-content: center;
-           background-color: #0073e6;
-           padding: 15px 0;
-       }
-       nav a {
-           margin: 0 20px;
-           text-decoration: none;
-           color: white;
-           font-weight: bold;
-           font-size: 1.1em;
-       }
-       nav a:hover {
-           color: #ffcc00;
-           border-bottom: 2px solid #ffcc00;
-           padding-bottom: 5px;
-       }
-     
-       /* 컨테이너 */
-       .container {
-           max-width: 1200px;
-           margin: 20px auto;
-           padding: 20px;
-           background-color: white;
-           border-radius: 10px;
-           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-       }
-     
-       /* 섹션 스타일 */
-       section {
-           margin: 20px 0;
-       }
-     
-       /* 게시판 스타일 */
-       .board-list {
-           display: flex;
-           gap: 20px;
-           flex-wrap: wrap;
-       }
-       .board-item {
-           background-color: #f9f9f9;
-           border-radius: 8px;
-           padding: 15px;
-           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-           width: calc(33.333% - 20px);
-           text-align: center;
-       }
-       .board-item:hover {
-           transform: scale(1.05);
-           transition: transform 0.3s ease;
-           background-color: #e6f7ff;
-       }
-     
-       /* 푸터 스타일 */
-       footer {
-           text-align: center;
-           padding: 15px;
-           background-color: #0073e6;
-           color: white;
-           font-size: 0.9em;
-           margin-top: auto;
-       }
-   </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&family=Song+Myung&display=swap" rel="stylesheet">
+    <title>코딩 커뮤니티</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            margin: 0;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: #e0e0e0; /* 밝은 회색 텍스트 */
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #2c3e50, #34495e); /* 어두운 그라데이션 배경 */
+        }
+       
+        input {
+            font-family: 'Gowun Dodum', sans-serif; /* 원하는 글꼴로 지정 */
+        }
+
+
+        button {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+
+        /* 상단 섹션 디자인 */
+        .main-section {
+            position: relative;
+            height: 90vh; /* 화면의 90% 높이 */
+            background-image: url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8JUVDJUJEJTk0JUVCJTk0JUE5fGVufDB8fDB8fHww');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.5s ease, opacity 0.5s ease; /* 페이드 아웃 전환 */
+            border-radius: 10px; /* 둥근 모서리 */
+        }
+
+
+        /* 배경에 덧씌울 불투명한 오버레이 */
+        .main-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0); /* 초기엔 투명 */
+            transition: background 0.5s ease;
+            border-radius: 10px; /* 둥근 모서리 */
+        }
+
+
+        .main-section.scroll-down::before {
+            background: rgba(0, 0, 0, 0.6); /* 스크롤 후 어두운 오버레이 */
+        }
+
+
+        .main-section h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 0;
+            transition: color 0.5s ease;
+        }
+
+
+        .main-section p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-top: 15px;
+            transition: color 0.5s ease;
+        }
+
+
+        .main-section.scroll-down h1,
+        .main-section.scroll-down p {
+            color: #bdc3c7; /* 스크롤 후 텍스트 색상 변경 */
+        }
+
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background: rgba(44, 62, 80, 0.9); /* 어두운 네이비 배경 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            border-radius: 10px;
+        }
+
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+
+        .navbar .menu {
+            display: flex;
+            gap: 15px;
+        }
+
+
+        .navbar .menu a {
+            text-decoration: none;
+            color: #ecf0f1; /* 밝은 회색 */
+            font-size: 1rem;
+            padding: 8px 15px;
+            border: 1px solid #34495e;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+
+
+        .navbar .menu a:hover {
+            background-color: #2c3e50; /* 어두운 배경 */
+        }
+
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        .search-bar input {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: 1px solid #34495e;
+            border-radius: 25px;
+            outline: none;
+            background-color: #2c3e50;
+            color: white;
+        }
+
+
+        .search-bar button {
+            padding: 10px 25px;
+            font-size: 1rem;
+            background:#16a085;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+
+        .search-bar button:hover {
+            background:#1abc9c;
+        }
+
+
+        /* 추가 영역 - 언어 선택 섹션 */
+        .language-selector {
+            background: linear-gradient(to bottom, #1e2d3b, #28344b);
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+
+        .language-selector h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ecf0f1;
+        }
+
+
+        .language-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+
+        .language-card {
+            background: linear-gradient(to right, #34495e, #2c3e50);
+            color: #ecf0f1;
+            width: 150px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+
+        .language-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* 추가 영역 - 코딩 볼거리 섹션 */
+        .content {
+            background: linear-gradient(to bottom, #2c3e50, #34495e);
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+
+        .content h3 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #ecf0f1;
+        }
+
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+
+        .card {
+            width: 300px;
+            background-color: #34495e;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: #ecf0f1;
+        }
+
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+
+        .card h4 {
+            margin: 0 0 10px;
+        }
+
+
+        .card p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #bdc3c7;
+        }
+
+
+        .card a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #1abc9c;
+            text-decoration: none;
+        }
+
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+    <!-- 상단 영역 -->
+    <div class="navbar">
+        <div class="logo">코딩 커뮤니티</div>
+        <div class="search-bar">
+            <input type="text" placeholder="검색어를 입력하세요">
+            <button>검색</button>
+        </div>
+        <div class="menu">
+            <!-- 로그인/로그아웃 버튼은 JavaScript에서 동적으로 삽입 -->
+        </div>
+    </div>
+    <section class="main-section" id="main-section">
+        <h1>함께 배우고 성장하는 코딩 커뮤니티</h1>
+        <p>이 사이트는 코딩을 사랑하는 사람들이 모여 지식을 공유하고, 프로젝트를 함께하며<br>서로 성장할 수 있도록 돕습니다.</p>
+    </section>
 
 
+    <section class="language-selector">
+        <h3>배울 수 있는 프로그래밍 언어</h3>
+        <div class="language-container">
+            <div class="language-card">Python</div>
+            <div class="language-card">JavaScript</div>
+            <div class="language-card">HTML</div>
+            <div class="language-card">CSS</div>
+            <div class="language-card">Java</div>
+            <div class="language-card">C++</div>
+        </div>
+    </section>
 
 
-<header>
-   <h1>덕현고등학교 코딩 커뮤니티</h1>
-   <div class="auth-buttons">
-       <a href="login.html">로그인&회원가입</a>
-  
-   </div>
-</header>
+    <!-- 코딩 볼거리 섹션 -->
+    <section class="content">
+        <h3>추천하는 컨텐츠</h3>
+        <div class="cards">
+            <div class="card">
+                <h4>추천 글: HTML 기초</h4>
+                <p>HTML을 처음 배우는 사람들을 위한 기본 문법과 구조 설명.</p>
+                <a href="#">더 읽어보기 →</a>
+            </div>
+            <div class="card">
+                <h4>유용한 리소스</h4>
+                <p>프로그래밍 학습을 돕는 무료 및 유료 리소스 모음.</p>
+                <a href="#">더 알아보기 →</a>
+            </div>
+            <div class="card">
+                <h4>코드 예제</h4>
+                <p>간단한 코드 예제를 통해 실습하며 배우기.</p>
+                <a href="#">예제 보기 →</a>
+            </div>
+        </div>
+    </section>
 
 
+    <script>
+        // 페이드 아웃 효과
+        window.addEventListener("scroll", () => {
+            const mainSection = document.getElementById("main-section");
+            const scrollPosition = window.scrollY;
 
 
-<nav>
-   <a href="home.html">홈</a>
-   <a href="board.html">게시판</a>
-</nav>
+            if (scrollPosition > 100) {
+                mainSection.classList.add("scroll-down");
+            } else {
+                mainSection.classList.remove("scroll-down");
+            }
+        });
+    </script>
 
 
+    <!-- Firebase 연동 및 로그인 상태 처리 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 
-<section class="container" id="home">
-   <h2>커뮤니티 소개</h2>
-   <p>덕현고등학교 코딩 커뮤니티는 코딩을 배우고, 프로젝트를 진행하고, 서로의 성장을 돕기 위해 만들어진 공간입니다.</p>
-</section>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJBp3-YGdAbTUpnRHOS-jWeJPjrWW-ip0",
+            authDomain: "nadingcorae.firebaseapp.com",
+            projectId: "nadingcorae",
+            storageBucket: "nadingcorae.appspot.com",
+            messagingSenderId: "17771008794",
+            appId: "1:17771008794:web:da0b7d54e3746985c752a3",
+            measurementId: "G-TDBG2XR5FP"
+        };
 
 
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
 
-<section class="container" id="board">
-   <h2>게시판</h2>
-   <div class="board-list">
-       <div class="board-item">
-           <h3>코딩 학습 자료</h3>
-           <p>유용한 학습 자료를 확인하고 공유해 보세요!</p>
-       </div>
-       <div class="board-item">
-           <h3>프로젝트 팀원 모집</h3>
-           <p>팀원을 찾고 프로젝트를 함께 시작하세요.</p>
-       </div>
-       <div class="board-item">
-           <h3>질문과 답변</h3>
-           <p>코딩에 관한 궁금증을 해결해 보세요!</p>
-       </div>
-   </div>
-</section>
+        // 로그인 상태에 따라 메뉴를 업데이트
+        onAuthStateChanged(auth, (user) => {
+            const menu = document.querySelector('.menu');
+            menu.innerHTML = ''; // 기존 버튼 제거
 
 
+            // 항상 게시판 버튼 추가
+            const boardButton = document.createElement('a');
+            boardButton.textContent = "게시판";
+            boardButton.href = "board.html";
+            menu.appendChild(boardButton);
 
 
-<footer>
-   <p>&copy; 2024 덕현고등학교 코딩 커뮤니티</p>
-</footer>
+            if (user) {
+                // 로그인 상태
+                const logoutButton = document.createElement('a');
+                logoutButton.textContent = "로그아웃";
+                logoutButton.href = "#";
+                logoutButton.onclick = (e) => {
+                    e.preventDefault();
+                    signOut(auth).then(() => {
+                        alert("로그아웃 되었습니다.");
+                        window.location.href = "index.html";
+                    }).catch((error) => {
+                        alert(`로그아웃 실패: ${error.message}`);
+                    });
+                };
+                menu.appendChild(logoutButton);
+            } else {
+                // 비로그인 상태
+                const loginButton = document.createElement('a');
+                loginButton.textContent = "로그인/회원가입";
+                loginButton.href = "login_signup.html";
+                menu.appendChild(loginButton);
+            }
+        });
 
 
-
-
+        // 초기 로컬 스토리지 확인
+        window.onload = () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user && !auth.currentUser) {
+                localStorage.removeItem("user"); // 만료된 로그인 상태 정리
+            }
+        };
+    </script>
 </body>
 </html>
+
+
+
