@@ -1,236 +1,472 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>덕현고등학교 코딩 커뮤니티 - 게시판</title>
-   <style>
-       /* 기본 스타일 */
-       * {
-           margin: 0;
-           padding: 0;
-           box-sizing: border-box;
-       }
-       body {
-           font-family: 'Arial', sans-serif;
-           background: linear-gradient(to right, #00c6ff, #0072ff);
-           color: #333;
-           display: flex;
-           flex-direction: column;
-           min-height: 100vh;
-       }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&family=Song+Myung&display=swap" rel="stylesheet">
+    <title>코딩 커뮤니티 게시판</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            margin: 0;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: #ecf0f1;
+            background-color: #202e3e;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+       
+        input {
+            font-family: 'Gowun Dodum', sans-serif; /* 원하는 글꼴로 지정 */
+        }
 
 
-       /* 헤더 */
-       header {
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           background-color: rgba(0, 0, 0, 0.6);
-           color: white;
-           padding: 20px;
-           font-size: 1.5em;
-       }
-       header h1 {
-           margin-left: 20px;
-       }
-       .auth-buttons {
-           margin-right: 20px;
-       }
-       .auth-buttons a {
-           text-decoration: none;
-           color: white;
-           font-weight: bold;
-           margin-left: 10px;
-           padding: 8px 12px;
-           background-color: #0073e6;
-           border-radius: 5px;
-           transition: background-color 0.3s;
-       }
-       .auth-buttons a:hover {
-           background-color: #005bb5;
-       }
+        button {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
 
 
-       /* 네비게이션 */
-       nav {
-           display: flex;
-           justify-content: center;
-           background-color: #0073e6;
-           padding: 15px 0;
-       }
-       nav a {
-           margin: 0 20px;
-           text-decoration: none;
-           color: white;
-           font-weight: bold;
-           font-size: 1.1em;
-       }
-       nav a:hover {
-           color: #ffcc00;
-           border-bottom: 2px solid #ffcc00;
-           padding-bottom: 5px;
-       }
+        /* 네비게이션 바 */
+        .navbar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background-color: #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
 
 
-       /* 컨테이너 */
-       .container {
-           max-width: 1200px;
-           margin: 20px auto;
-           padding: 20px;
-           background-color: white;
-           border-radius: 10px;
-           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-       }
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ecf0f1;
+        }
 
 
-       /* 게시판 테이블 */
-       .board-table {
-           width: 100%;
-           border-collapse: collapse;
-           margin-top: 20px;
-       }
-       .board-table th, .board-table td {
-           padding: 15px;
-           border: 1px solid #ddd;
-           text-align: left;
-       }
-       .board-table th {
-           background-color: #0073e6;
-           color: white;
-           font-weight: bold;
-       }
-       .board-table tr:nth-child(even) {
-           background-color: #f9f9f9;
-       }
-       .board-table tr:hover {
-           background-color: #e6f7ff;
-       }
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+        }
 
 
-       /* 글쓰기 버튼 */
-       .write-button {
-           display: inline-block;
-           margin-top: 20px;
-           padding: 10px 15px;
-           background-color: #0073e6;
-           color: white;
-           font-weight: bold;
-           text-decoration: none;
-           border-radius: 5px;
-           text-align: center;
-           transition: background-color 0.3s;
-       }
-       .write-button:hover {
-           background-color: #005bb5;
-       }
+        .navbar .menu a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 8px 15px;
+            background:#16a085;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
 
 
-       /* 푸터 */
-       footer {
-           text-align: center;
-           padding: 15px;
-           background-color: #0073e6;
-           color: white;
-           font-size: 0.9em;
-           margin-top: auto;
-       }
-   </style>
+        .navbar .menu a:hover {
+            background:#1abc9c;
+        }
 
 
-   <!-- Firebase SDK 모듈 -->
-   <script type="module">
-       // Firebase SDK 모듈 가져오기
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-       import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        /* 게시판 컨테이너 */
+        .board-container {
+            width: 80%;
+            margin-top: 100px;
+            background-color: #34495e;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
 
 
-       // Firebase 설정
-       const firebaseConfig = {
-           apiKey: "AIzaSyCyO4ukrG1siAAWhULjA-5eCbuIcIP_hqE",
-           authDomain: "deokhyeon-board.firebaseapp.com",
-           projectId: "deokhyeon-board",
-           storageBucket: "deokhyeon-board.firebasestorage.app",
-           messagingSenderId: "380602394620",
-           appId: "1:380602394620:web:0c5825cb84dc8072637479",
-       };
+        .board-container h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: #ecf0f1;
+        }
 
 
-       // Firebase 초기화
-       const app = initializeApp(firebaseConfig);
-       const db = getFirestore(app);  // Firestore 초기화
+        /* 게시물 검색 및 작성 */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
 
 
-       // 게시글 목록 실시간 업데이트
-       async function fetchPosts() {
-           const boardTable = document.querySelector('.board-table tbody');
-           const postsRef = collection(db, "posts");
-           const q = query(postsRef, orderBy("timestamp", "desc"));
+        .search-bar input {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+        }
 
 
-           // Firestore에서 실시간 데이터 가져오기
-           onSnapshot(q, (querySnapshot) => {
-               boardTable.innerHTML = ''; // 기존 데이터를 초기화
-               let index = 1;
-               querySnapshot.forEach((doc) => {
-                   const post = doc.data();
-                   const row = document.createElement('tr');
-                   row.innerHTML = `
-                       <td>${index++}</td>
-                       <td>${post.title}</td>
-                       <td>${post.content}</td>
-                       <td>${post.author}</td>
-                       <td>${new Date(post.timestamp.seconds * 1000).toLocaleDateString()}</td>
-                   `;
-                   boardTable.appendChild(row);
-               });
-           });
-       }
+        .search-bar button,
+        .search-bar .post-button {
+            padding: 10px 20px;
+            background:#16a085;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+        }
 
 
-       // 페이지 로드 시 게시글 목록 가져오기
-       window.onload = fetchPosts;
-   </script>
+        .search-bar button:hover,
+        .search-bar .post-button:hover {
+            background:#1abc9c;
+        }
+
+
+        /* 게시물 리스트 */
+        .board-list {
+            margin-top: 30px;
+        }
+
+
+        .board-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+
+        .board-list table th,
+        .board-list table td {
+            padding: 15px;
+            border: 1px solid #2c3e50;
+            text-align: center;
+        }
+
+
+        .board-list table th {
+            background-color: #2c3e50;
+        }
+
+
+        .board-list table td {
+            background-color: #2c3e50;
+        }
+
+
+        .board-list table td a {
+            color: #16a085;
+            text-decoration: none;
+        }
+
+
+        .board-list table td a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* 게시글 입력 영역 */
+        .post-input {
+            width: 97.5%;
+            margin-top: 20px;
+            background-color: #202e3e;
+            border-radius: 5px;
+            padding: 20px;
+            font-family: inherit;
+        }
+
+
+        .post-input input,
+        .post-input textarea {
+            width: 98.2%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            background-color: #2c3e50;
+            color: white;
+            font-family: inherit;
+        }
+
+
+        .post-input textarea {
+            height: 150px;
+            resize: none;
+            font-family: inherit;
+        }
+
+
+        .post-input button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px;
+            background:#16a085;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            transition: background-color 0.3s ease; /* 부드러운 전환 효과 추가 */
+            font-family: inherit;
+        }
+
+
+        .post-input button:hover {
+            background:#1abc9c;
+            font-family: inherit;
+        }
+
+
+        /* 검색 결과 없음 메시지 */
+        .no-results {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 20px;
+            font-family: inherit;
+        }
+    </style>
 </head>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+<script>
+    // Firebase 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyBJBp3-YGdAbTUpnRHOS-jWeJPjrWW-ip0",
+        authDomain: "nadingcorae.firebaseapp.com",
+        projectId: "nadingcorae",
+        storageBucket: "nadingcorae.firebasestorage.app",
+        messagingSenderId: "17771008794",
+        appId: "1:17771008794:web:da0b7d54e3746985c752a3",
+        measurementId: "G-TDBG2XR5FP"
+    };
+
+
+    const postsCollection = collection(db, "codingnarae_board");
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.getDatabase(app);
+    const postsRef = firebase.ref(db, "posts");
+
+
+    // 게시물 목록 렌더링
+    function renderPosts(postsToRender) {
+        const tableBody = document.querySelector('#boardTable tbody');
+        tableBody.innerHTML = ''; // 기존 게시물 목록 비우기
+
+
+
+
+        if (postsToRender.length === 0) {
+            document.getElementById('noResultsMessage').style.display = 'block';
+        } else {
+            document.getElementById('noResultsMessage').style.display = 'none';
+            postsToRender.forEach(post => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${post.id}</td>
+                    <td><a href="page_detail.html?id=${post.id}" class="post-link">${post.title}</a></td>
+                    <td>${post.author}</td>
+                    <td>${post.date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    }
+
+
+    // Firebase에서 게시물 데이터를 실시간으로 가져오기
+    function fetchPosts() {
+        firebase.onValue(postsRef, (snapshot) => {
+            const posts = [];
+            snapshot.forEach(childSnapshot => {
+                const data = childSnapshot.val();
+                posts.push({
+                    id: data.id,
+                    title: data.title,
+                    author: data.author,
+                    date: data.date
+                });
+            });
+            renderPosts(posts);
+        });
+    }
+
+
+    // 게시글 작성 기능 (Firebase에 데이터 저장)
+    document.getElementById('submitPostButton').addEventListener('click', function () {
+        const title = document.getElementById('postTitle').value;
+        const content = document.getElementById('postContent').value;
+
+
+        if (title && content) {
+            const newPost = {
+                id: Date.now(), // 고유 ID를 타임스탬프로 생성
+                title: title,
+                author: '새작성자', // 작성자 정보는 로그인 연동 시 수정 가능
+                date: new Date().toISOString().split('T')[0]
+            };
+
+
+
+
+
+
+
+
+            firebase.push(postsRef, newPost); // Firebase Database에 저장
+            document.getElementById('postInput').style.display = 'none'; // 입력 영역 숨기기
+            document.getElementById('postTitle').value = ''; // 입력 필드 초기화
+            document.getElementById('postContent').value = '';
+        }
+    });
+
+
+    // 초기 게시물 데이터 가져오기
+    fetchPosts();
+</script>
 <body>
-   <header>
-       <h1>덕현고등학교 코딩 커뮤니티</h1>
-       <div class="auth-buttons">
-           <a href="login.html">로그인</a>
-           <a href="signup.html">회원가입</a>
-       </div>
-   </header>
+    <!-- 네비게이션 바 -->
+    <div class="navbar">
+        <div class="logo">코딩 커뮤니티</div>
+        <div class="menu">
+            <a href="index.html">홈</a>
+            <a href="login_signup.html">로그인/회원가입</a>
+        </div>
+    </div>
 
 
-   <nav>
-       <a href="home.html">홈</a>
-       <a href="board.html">게시판</a>
-   </nav>
+    <!-- 게시판 -->
+    <div class="board-container">
+        <h2>게시판</h2>
+       
+        <!-- 게시물 검색 및 작성 -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="게시물 검색...">
+            <button id="searchButton">검색</button>
+            <button class="post-button" id="createPostButton">게시글 작성</button>
+        </div>
 
 
-   <section class="container" id="board">
-       <h2>게시글 목록</h2>
-       <table class="board-table">
-           <thead>
-               <tr>
-                   <th>번호</th>
-                   <th>제목</th>
-                   <th>내용</th>
-                   <th>작성자</th>
-                   <th>날짜</th>
-               </tr>
-           </thead>
-           <tbody>
-               <!-- 게시글이 동적으로 여기에 추가됩니다 -->
-           </tbody>
-       </table>
-       <a href="write_post.html" class="write-button">글쓰기</a>
-   </section>
+        <!-- 게시물 리스트 -->
+        <div class="board-list">
+            <table id="boardTable">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 게시물 목록 (동적으로 추가됨) -->
+                </tbody>
+            </table>
+        </div>
 
 
-   <footer>
-       <p>&copy; 2024 덕현고등학교 코딩 커뮤니티</p>
-   </footer>
+        <!-- 게시글 입력 영역 (보이지 않음, '게시글 작성' 버튼 클릭 시 보이도록) -->
+        <div class="post-input" id="postInput" style="display: none;">
+            <input type="text" id="postTitle" placeholder="게시글 제목을 입력하세요...">
+            <textarea id="postContent" placeholder="게시글 내용을 입력하세요..."></textarea>
+            <button id="submitPostButton">게시글 작성</button>
+        </div>
+
+
+        <!-- 검색 결과 없음 메시지 -->
+        <div id="noResultsMessage" class="no-results" style="display: none;">
+            검색 결과가 없습니다.
+        </div>
+    </div>
+
+
+    <script>
+        // 게시물 데이터 예시 (일반적으로 서버에서 가져옴)
+        const posts = [
+            { id: 1, title: '코딩을 시작하려면', author: '김코딩', date: '2024-11-24' },
+            { id: 2, title: '자바스크립트 초급 강좌', author: '이프로그', date: '2024-11-23' },
+            { id: 3, title: '웹 디자인과 프론트엔드', author: '홍디자이너', date: '2024-11-22' },
+            { id: 4, title: '백엔드 개발 개요', author: '박백엔드', date: '2024-11-21' },
+            { id: 5, title: '자바 기본 문법', author: '최자바', date: '2024-11-20' },
+            { id: 6, title: 'CSS 레이아웃 기초', author: '정CSS', date: '2024-11-19' },
+            { id: 7, title: '파이썬 데이터 처리', author: '임파이썬', date: '2024-11-18' }
+        ];
+
+
+        // 게시물 목록을 동적으로 출력하는 함수
+        function renderPosts(postsToRender) {
+            const tableBody = document.querySelector('#boardTable tbody');
+            tableBody.innerHTML = ''; // 기존 게시물 목록 비우기
+
+
+            if (postsToRender.length === 0) {
+                document.getElementById('noResultsMessage').style.display = 'block';
+            } else {
+                document.getElementById('noResultsMessage').style.display = 'none';
+                postsToRender.forEach(post => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${post.id}</td>
+                        <td><a href="page_detail.html?id=${post.id}" class="post-link">${post.title}</a></td>
+                        <td>${post.author}</td>
+                        <td>${post.date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('post-link')) {
+                event.preventDefault(); // 기본 링크 동작 방지
+                const postId = new URL(event.target.href).searchParams.get('id');
+                window.location.href = `page_detail.html?id=${postId}`;
+            }
+        });
+
+
+        // 게시물 검색 기능
+        document.getElementById('searchButton').addEventListener('click', function () {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const filteredPosts = posts.filter(post => post.title.toLowerCase().includes(searchQuery));
+            renderPosts(filteredPosts);
+        });
+
+
+        // 게시글 작성 버튼 클릭 시 입력 영역 보이기
+        document.getElementById('createPostButton').addEventListener('click', function () {
+            document.getElementById('postInput').style.display = 'block';
+        });
+
+
+        // 게시글 작성 기능
+        document.getElementById('submitPostButton').addEventListener('click', function () {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+           
+            if (title && content) {
+                const newPost = {
+                    id: posts.length + 1,
+                    title: title,
+                    author: '새작성자',
+                    date: new Date().toISOString().split('T')[0]
+                };
+                posts.push(newPost);
+                renderPosts(posts); // 게시물 목록 업데이트
+                document.getElementById('postInput').style.display = 'none'; // 입력 영역 숨기기
+            }
+        });
+
+
+        // 초기 게시물 렌더링
+        renderPosts(posts);
+    </script>
 </body>
 </html>
 
