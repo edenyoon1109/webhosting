@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&family=Song+Myung&display=swap" rel="stylesheet">
+    <title>게시글 상세</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            margin: 0;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: #ecf0f1;
+            background-color: #202e3e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+                /* 네비게이션 바 스타일 */
+        .navbar {
+            width: 100%;
+            background-color: #34495e;
+            display: flex;
+            justify-content: flex-end; /* 버튼들을 오른쪽으로 정렬 */
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        .navbar a {
+            margin-left: 20px; /* 버튼 간격 추가 */
+            padding: 8px 15px;
+            background:#16a085;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 1.0rem;
+            font-family: inherit;
+            transition: background-color 0.3s;
+        }
+
+
+        .navbar a:hover {
+            background:#1abc9c;
+        }
+
+
+        /* 컨텐츠 섹션 */
+        .content {
+            margin-top: 80px; /* 네비게이션 바 높이 고려 */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .post-content {
+            width: 50%; /* 가로 크기 조정 */
+            background-color: #34495e;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+
+        .post-details {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #34495e; /* 어두운 선으로 구분 */
+        }
+
+
+        .post-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+        }
+
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+            border-top: 1px solid #34495e;
+            padding-top: 10px;
+        }
+
+
+        .post-body {
+            font-size: 1.1rem; /* 글자 크기 조정 */
+            line-height: 1.8; /* 글자 크기에 맞게 줄 간격 조정 */
+            color: #ecf0f1;
+            text-align: justify; /* 텍스트 정렬 */
+            border-top: 1px solid #34495e;
+            padding-top: 10px;
+            overflow-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
+            word-break: keep-all; /* 한국어 단어 끊김 방지 */
+    }
+
+
+        /* 댓글창 열기 버튼 스타일 */
+        .toggle-comments-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background:#16a085;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+
+        .toggle-comments-btn:hover {
+            background:#1abc9c;
+        }
+
+
+        /* 댓글 섹션 스타일 */
+        .comment-section {
+            display: none; /* 초기에는 숨김 */
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #2c3e50;
+            font-family: inherit;
+        }
+
+
+        .comment-section textarea {
+            width: 97.5%;
+            height: 50px;
+            border-radius: 5px;
+            border: 1px solid #ecf0f1;
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 10px;
+            font-size: 1rem;
+            resize: none;
+            font-family: inherit;
+        }
+
+
+        .comment-section button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            background:#16a085;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: inherit;
+        }
+
+
+        .comment-section button:hover {
+            background:#1abc9c;
+        }
+
+
+        /* 댓글 목록 스타일 */
+        .comment-list {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #2c3e50;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: inherit;
+        }
+
+
+        .comment-item {
+            border-bottom: 1px solid #34495e;
+            padding: 10px 0;
+            color: #6e7072;
+            font-family: inherit;
+        }
+
+
+        .comment-item:last-child {
+            border-bottom: none;
+            font-family: inherit;
+        }
+
+
+        /* 뒤로가기 버튼 스타일 */
+        .back-button {
+            margin-top: 20px;
+            display: block;
+            padding: 8px 15px;
+            text-align: center;
+            background:#16a085;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+        }
+
+
+        .back-button:hover {
+            background:#1abc9c;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html">홈</a>
+        <a href="login_signup.html">로그인/회원가입</a>
+    </nav>
+    <div class="post-content">
+        <!-- 게시글 정보 섹션 -->
+        <div class="post-details">
+            <h1 id="postTitle" class="post-title">게시글 제목</h1>
+            <div class="post-meta">
+                <p><strong>작성자:</strong> <span id="postAuthor"></span></p>
+                <p><strong>작성일:</strong> <span id="postDate"></span></p>
+            </div>
+            <div id="postContent" class="post-body">  
+            </div>
+        </div>
+
+
+        <!-- 댓글 목록 -->
+        <div class="comment-list" id="commentList">
+            <p class="comment-item">첫 댓글을 작성해 보세요!</p>
+        </div>
+
+
+        <!-- 댓글 열기/닫기 버튼 -->
+        <button id="toggleComments" class="toggle-comments-btn">댓글창 열기</button>
+
+
+        <!-- 댓글 섹션 -->
+        <div id="commentSection" class="comment-section">
+            <textarea id="commentInput" placeholder="댓글을 입력하세요..."></textarea>
+            <button id="submitComment">댓글 작성</button>
+        </div>
+
+
+        <!-- 뒤로가기 버튼 -->
+        <a href="board.html" class="back-button">목록으로 돌아가기</a>
+    </div>
+
+
+    <script>
+        const toggleCommentsButton = document.getElementById('toggleComments');
+        const commentSection = document.getElementById('commentSection');
+        const commentList = document.getElementById('commentList');
+
+
+        // 댓글창 열기/닫기 버튼 기능
+        toggleCommentsButton.addEventListener('click', () => {
+            if (commentSection.style.display === 'none' || !commentSection.style.display) {
+                commentSection.style.display = 'block';
+                toggleCommentsButton.textContent = '댓글창 닫기';
+            } else {
+                commentSection.style.display = 'none';
+                toggleCommentsButton.textContent = '댓글창 열기';
+            }
+        });
+
+
+        // 댓글 작성 버튼 클릭 이벤트
+        document.getElementById('submitComment').addEventListener('click', () => {
+            const comment = document.getElementById('commentInput').value;
+            if (comment.trim()) {
+                // 댓글 추가
+                const commentItem = document.createElement('p');
+                commentItem.classList.add('comment-item');
+                commentItem.textContent = comment;
+                commentList.appendChild(commentItem);
+
+
+                // 기존 안내 메시지 제거
+                if (commentList.firstElementChild.textContent === '댓글이 없습니다. 첫 댓글을 작성해 보세요!') {
+                    commentList.removeChild(commentList.firstElementChild);
+                }
+
+
+                // 입력 필드 초기화
+                document.getElementById('commentInput').value = '';
+                alert('댓글이 작성되었습니다.');
+            } else {
+                alert('댓글을 입력해주세요.');
+            }
+        });
+
+
+        // URL에서 게시글 ID 추출 및 데이터 표시
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+
+        fetch('posts.json') // 게시글 데이터 로드
+            .then(response => response.json())
+            .then(data => {
+                const post = data.find(p => p.id === parseInt(postId));
+                if (post) {
+                    document.getElementById('postTitle').textContent = post.title;
+                    document.getElementById('postAuthor').textContent = post.author;
+                    document.getElementById('postDate').textContent = post.date;
+                    document.getElementById('postContent').textContent = post.content;
+                } else {
+                    document.getElementById('postTitle').textContent = '게시글을 찾을 수 없습니다.';
+                }
+            })
+            .catch(error => {
+                console.error('게시글 데이터를 불러오는 데 오류가 발생했습니다:', error);
+                document.getElementById('postTitle').textContent = '게시글을 불러올 수 없습니다.';
+            });
+    </script>
+</body>
+</html>
+
+
+
+
+
