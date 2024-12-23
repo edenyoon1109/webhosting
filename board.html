@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>덕현고등학교 코딩 커뮤니티 - 게시판</title>
+   <style>
+       /* 기본 스타일 */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+       body {
+           font-family: 'Arial', sans-serif;
+           background: linear-gradient(to right, #00c6ff, #0072ff);
+           color: #333;
+           display: flex;
+           flex-direction: column;
+           min-height: 100vh;
+       }
+
+
+       /* 헤더 */
+       header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           background-color: rgba(0, 0, 0, 0.6);
+           color: white;
+           padding: 20px;
+           font-size: 1.5em;
+       }
+       header h1 {
+           margin-left: 20px;
+       }
+       .auth-buttons {
+           margin-right: 20px;
+       }
+       .auth-buttons a {
+           text-decoration: none;
+           color: white;
+           font-weight: bold;
+           margin-left: 10px;
+           padding: 8px 12px;
+           background-color: #0073e6;
+           border-radius: 5px;
+           transition: background-color 0.3s;
+       }
+       .auth-buttons a:hover {
+           background-color: #005bb5;
+       }
+
+
+       /* 네비게이션 */
+       nav {
+           display: flex;
+           justify-content: center;
+           background-color: #0073e6;
+           padding: 15px 0;
+       }
+       nav a {
+           margin: 0 20px;
+           text-decoration: none;
+           color: white;
+           font-weight: bold;
+           font-size: 1.1em;
+       }
+       nav a:hover {
+           color: #ffcc00;
+           border-bottom: 2px solid #ffcc00;
+           padding-bottom: 5px;
+       }
+
+
+       /* 컨테이너 */
+       .container {
+           max-width: 1200px;
+           margin: 20px auto;
+           padding: 20px;
+           background-color: white;
+           border-radius: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+       }
+
+
+       /* 게시판 테이블 */
+       .board-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin-top: 20px;
+       }
+       .board-table th, .board-table td {
+           padding: 15px;
+           border: 1px solid #ddd;
+           text-align: left;
+       }
+       .board-table th {
+           background-color: #0073e6;
+           color: white;
+           font-weight: bold;
+       }
+       .board-table tr:nth-child(even) {
+           background-color: #f9f9f9;
+       }
+       .board-table tr:hover {
+           background-color: #e6f7ff;
+       }
+
+
+       /* 글쓰기 버튼 */
+       .write-button {
+           display: inline-block;
+           margin-top: 20px;
+           padding: 10px 15px;
+           background-color: #0073e6;
+           color: white;
+           font-weight: bold;
+           text-decoration: none;
+           border-radius: 5px;
+           text-align: center;
+           transition: background-color 0.3s;
+       }
+       .write-button:hover {
+           background-color: #005bb5;
+       }
+
+
+       /* 푸터 */
+       footer {
+           text-align: center;
+           padding: 15px;
+           background-color: #0073e6;
+           color: white;
+           font-size: 0.9em;
+           margin-top: auto;
+       }
+   </style>
+
+
+   <!-- Firebase SDK 모듈 -->
+   <script type="module">
+       // Firebase SDK 모듈 가져오기
+       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+
+       // Firebase 설정
+       const firebaseConfig = {
+           apiKey: "AIzaSyCyO4ukrG1siAAWhULjA-5eCbuIcIP_hqE",
+           authDomain: "deokhyeon-board.firebaseapp.com",
+           projectId: "deokhyeon-board",
+           storageBucket: "deokhyeon-board.firebasestorage.app",
+           messagingSenderId: "380602394620",
+           appId: "1:380602394620:web:0c5825cb84dc8072637479",
+       };
+
+
+       // Firebase 초기화
+       const app = initializeApp(firebaseConfig);
+       const db = getFirestore(app);  // Firestore 초기화
+
+
+       // 게시글 목록 실시간 업데이트
+       async function fetchPosts() {
+           const boardTable = document.querySelector('.board-table tbody');
+           const postsRef = collection(db, "posts");
+           const q = query(postsRef, orderBy("timestamp", "desc"));
+
+
+           // Firestore에서 실시간 데이터 가져오기
+           onSnapshot(q, (querySnapshot) => {
+               boardTable.innerHTML = ''; // 기존 데이터를 초기화
+               let index = 1;
+               querySnapshot.forEach((doc) => {
+                   const post = doc.data();
+                   const row = document.createElement('tr');
+                   row.innerHTML = `
+                       <td>${index++}</td>
+                       <td>${post.title}</td>
+                       <td>${post.content}</td>
+                       <td>${post.author}</td>
+                       <td>${new Date(post.timestamp.seconds * 1000).toLocaleDateString()}</td>
+                   `;
+                   boardTable.appendChild(row);
+               });
+           });
+       }
+
+
+       // 페이지 로드 시 게시글 목록 가져오기
+       window.onload = fetchPosts;
+   </script>
+</head>
+<body>
+   <header>
+       <h1>덕현고등학교 코딩 커뮤니티</h1>
+       <div class="auth-buttons">
+           <a href="login.html">로그인</a>
+           <a href="signup.html">회원가입</a>
+       </div>
+   </header>
+
+
+   <nav>
+       <a href="home.html">홈</a>
+       <a href="board.html">게시판</a>
+   </nav>
+
+
+   <section class="container" id="board">
+       <h2>게시글 목록</h2>
+       <table class="board-table">
+           <thead>
+               <tr>
+                   <th>번호</th>
+                   <th>제목</th>
+                   <th>내용</th>
+                   <th>작성자</th>
+                   <th>날짜</th>
+               </tr>
+           </thead>
+           <tbody>
+               <!-- 게시글이 동적으로 여기에 추가됩니다 -->
+           </tbody>
+       </table>
+       <a href="write_post.html" class="write-button">글쓰기</a>
+   </section>
+
+
+   <footer>
+       <p>&copy; 2024 덕현고등학교 코딩 커뮤니티</p>
+   </footer>
+</body>
+</html>
+
+
+

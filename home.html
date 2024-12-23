@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>덕현고등학교 코딩 커뮤니티</title>
+   <style>
+       /* 기본 스타일 */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+       body {
+           font-family: 'Arial', sans-serif;
+           background: linear-gradient(to right, #00c6ff, #0072ff);
+           color: #333;
+           display: flex;
+           flex-direction: column;
+           min-height: 100vh;
+       }
+     
+       /* 헤더 */
+       header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           background-color: rgba(0, 0, 0, 0.6);
+           color: white;
+           padding: 20px;
+           font-size: 1.5em;
+       }
+       header h1 {
+           margin-left: 20px;
+       }
+       .auth-buttons {
+           margin-right: 20px;
+       }
+       .auth-buttons a {
+           text-decoration: none;
+           color: white;
+           font-weight: bold;
+           margin-left: 10px;
+           padding: 8px 12px;
+           background-color: #0073e6;
+           border-radius: 5px;
+           transition: background-color 0.3s;
+       }
+       .auth-buttons a:hover {
+           background-color: #005bb5;
+       }
+     
+       /* 네비게이션 */
+       nav {
+           display: flex;
+           justify-content: center;
+           background-color: #0073e6;
+           padding: 15px 0;
+       }
+       nav a {
+           margin: 0 20px;
+           text-decoration: none;
+           color: white;
+           font-weight: bold;
+           font-size: 1.1em;
+       }
+       nav a:hover {
+           color: #ffcc00;
+           border-bottom: 2px solid #ffcc00;
+           padding-bottom: 5px;
+       }
+     
+       /* 컨테이너 */
+       .container {
+           max-width: 1200px;
+           margin: 20px auto;
+           padding: 20px;
+           background-color: white;
+           border-radius: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+       }
+     
+       /* 섹션 스타일 */
+       section {
+           margin: 20px 0;
+       }
+     
+       /* 게시판 스타일 */
+       .board-list {
+           display: flex;
+           gap: 20px;
+           flex-wrap: wrap;
+       }
+       .board-item {
+           background-color: #f9f9f9;
+           border-radius: 8px;
+           padding: 15px;
+           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+           width: calc(33.333% - 20px);
+           text-align: center;
+       }
+       .board-item:hover {
+           transform: scale(1.05);
+           transition: transform 0.3s ease;
+           background-color: #e6f7ff;
+       }
+     
+       /* 푸터 스타일 */
+       footer {
+           text-align: center;
+           padding: 15px;
+           background-color: #0073e6;
+           color: white;
+           font-size: 0.9em;
+           margin-top: auto;
+       }
+   </style>
+</head>
+<body>
+
+
+
+
+<header>
+   <h1>덕현고등학교 코딩 커뮤니티</h1>
+   <div class="auth-buttons">
+       <a href="login.html">로그인&회원가입</a>
+  
+   </div>
+</header>
+
+
+
+
+<nav>
+   <a href="home.html">홈</a>
+   <a href="board.html">게시판</a>
+</nav>
+
+
+
+
+<section class="container" id="home">
+   <h2>커뮤니티 소개</h2>
+   <p>덕현고등학교 코딩 커뮤니티는 코딩을 배우고, 프로젝트를 진행하고, 서로의 성장을 돕기 위해 만들어진 공간입니다.</p>
+</section>
+
+
+
+
+<section class="container" id="board">
+   <h2>게시판</h2>
+   <div class="board-list">
+       <div class="board-item">
+           <h3>코딩 학습 자료</h3>
+           <p>유용한 학습 자료를 확인하고 공유해 보세요!</p>
+       </div>
+       <div class="board-item">
+           <h3>프로젝트 팀원 모집</h3>
+           <p>팀원을 찾고 프로젝트를 함께 시작하세요.</p>
+       </div>
+       <div class="board-item">
+           <h3>질문과 답변</h3>
+           <p>코딩에 관한 궁금증을 해결해 보세요!</p>
+       </div>
+   </div>
+</section>
+
+
+
+
+<footer>
+   <p>&copy; 2024 덕현고등학교 코딩 커뮤니티</p>
+</footer>
+
+
+
+
+</body>
+</html>
